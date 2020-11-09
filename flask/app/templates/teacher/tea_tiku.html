@@ -1,0 +1,455 @@
+{% extends 'teacher/teacher_base.html' %}
+{% block page_content %}
+    <div class="modal fade" id="add_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">新增</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group  required"><label class="control-label" for="question">题目名称</label>
+
+                        <input autocomplete="off" class="form-control" id="question" name="question"
+                               placeholder="请输入题目名称" required="" type="text" value="">
+                    </div>
+                    <div class="form-group  required"><label class="control-label" for="optionA">选项A</label>
+
+                        <input autocomplete="off" class="form-control" id="optionA" name="optionA"
+                               placeholder="请输入选项" required="" type="text" value="">
+                    </div>
+                    <div class="form-group  required"><label class="control-label" for="optionB">选项B</label>
+
+                        <input autocomplete="off" class="form-control" id="optionB" name="optionB"
+                               placeholder="请输入选项" required="" type="text" value="">
+                    </div>
+                    <div class="form-group  required"><label class="control-label" for="optionC">选项C</label>
+
+                        <input autocomplete="off" class="form-control" id="optionC" name="optionC"
+                               placeholder="请输入选项" required="" type="text" value="">
+                    </div>
+                    <div class="form-group  required"><label class="control-label" for="optionD">选项D</label>
+
+                        <input autocomplete="off" class="form-control" id="optionD" name="optionD"
+                               placeholder="请输入选项" required="" type="text" value="">
+                    </div>
+                    <div class="form-group  required"><label class="control-label" for="optionE">选项E</label>
+
+                        <input autocomplete="off" class="form-control" id="optionE" name="optionE"
+                               placeholder="请输入选项" required="" type="text" value="">
+                    </div>
+                    <div class="form-group  required"><label class="control-label" for="answer">答案</label>
+
+                        <input autocomplete="off" class="form-control" id="answer" name="answer"
+                               placeholder="请输入题目名称" required="" type="text" value="">
+                    </div>
+                    <div class="form-group  required"><label class="control-label" for="score">分数</label>
+
+                        <input autocomplete="off" class="form-control" id="score" name="score"
+                               placeholder="请输入题目名称" required="" type="text" value="">
+                    </div>
+                    <div class="form-group  required"><label class="control-label" for="password">题目类型</label>
+                       <select class="form-control" id="fenlei" name="fenlei">
+
+                            <option value="单选">单选</option>
+                            <option value="多选">多选</option>
+                            <option value="填空">填空</option>
+                            <option value="简答">简答</option>
+                        </select>
+                    </div>
+                    <div class="form-group  required"><label class="control-label" for="password">考点</label>
+                            <ul name="treemenu1" id="treemenu1" class="treeview" >
+                                <li>第一单元
+	                                <ul>
+                                        <label><input type="radio" name="tiku_kaodian" value="1.1">第一节</label>
+                                        <br>
+                                        <label><input type="radio" name="tiku_kaodian" value="1.2">第二节</label>
+                                        <br>
+                                        <label><input type="radio" name="tiku_kaodian" value="1.3">第三节</label>
+                                        <br>
+                                        <label><input type="radio" name="tiku_kaodian" value="1.4">第四节</label>
+	                                </ul>
+                                </li>
+                            </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                    <button type="button" id="add_submit" class="btn btn-primary" data-dismiss="modal" onclick="add()">
+                        确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="del_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">提示</h4>
+                </div>
+                <div class="modal-body">
+                    <div class='modal-body text-center' id='myConfirmContent' style='font-size:18px;'>
+                        是否确定要删除?
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="del_submit">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="edit_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">编辑</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group "><label class="control-label">ID</label>
+                        <input autocomplete="off" class="form-control " id="edit_id" name="edit_id"
+                               type="text" value="" disabled>
+                    </div>
+                    <div class="form-group "><label class="control-label" for="edit_question">题目</label>
+                        <input autocomplete="off" class="form-control" id="edit_question" name="edit_question" type="text" value="">
+                    </div>
+                    <div class="form-group "><label class="control-label" for="ans_a">选项A</label>
+                        <input class="form-control" id="ans_a" name="ans_a" type="text" value="">
+                    </div>
+                    <div class="form-group "><label class="control-label" for="ans_a">选项B</label>
+                        <input class="form-control" id="ans_b" name="ans_b" type="text" value="">
+                    </div>
+                    <div class="form-group "><label class="control-label" for="ans_a">选项C</label>
+                        <input class="form-control" id="ans_c" name="ans_c" type="text" value="">
+                    </div>
+                    <div class="form-group "><label class="control-label" for="ans_a">选项D</label>
+                        <input class="form-control" id="ans_d" name="ans_d" type="text" value="">
+                    </div>
+                    <div class="form-group "><label class="control-label" for="ans_a">选项E</label>
+                        <input class="form-control" id="ans_e" name="ans_e" type="text" value="">
+                    </div>
+                    <div class="form-group "><label class="control-label" for="edit_answer">答案</label>
+                        <input class="form-control" id="edit_answer" name="edit_answer" type="text" value="">
+                    </div>
+                    <div class="form-group "><label class="control-label" for="xuehao">分值</label>
+                        <input class="form-control" id="edit_score" name="edit_score" type="text" value="">
+                    </div>
+                    <div class="form-group "><label class="control-label" for="edit_fenlei">分类</label>
+                        <select class="form-control" id="edit_fenlei" name="edit_fenlei">
+
+                            <option value="单选">单选</option>
+                            <option value="多选">多选</option>
+                            <option value="填空">填空</option>
+                            <option value="简答">简答</option>
+                        </select>
+                    </div>
+                    <div class="form-group "><label class="control-label" for="edit_kaodian">考点</label>
+                        <ul name="treemenu3" id="treemenu3" class="treeview" >
+                                <li>第一单元
+	                                <ul>
+                                        <label><input type="radio" name="edit_kaodian" value="1.1">第一节</label>
+                                        <br>
+                                        <label><input type="radio" name="edit_kaodian" value="1.2">第二节</label>
+                                        <br>
+                                        <label><input type="radio" name="edit_kaodian" value="1.3">第三节</label>
+                                        <br>
+                                        <label><input type="radio" name="edit_kaodian" value="1.4">第四节</label>
+	                                </ul>
+                                </li>
+                            </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                    <button type="button" id="edit_submit" class="btn btn-primary" data-dismiss="modal">确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div style="width: 100%;margin: 0 auto;background-color: #f2f2f2;border-radius: 15px">
+                <table id="table" class="table table-bordered" style=""></table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <!-- bootstrap-table.min.js -->
+    <script src="{{ url_for('static',filename='js/bootstrap-table.min.js') }}"></script>
+    <!-- 引入中文语言包 -->
+    <script src="{{ url_for('static',filename='js/bootstrap-table-zh-CN.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/fileinput.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/fileinput_zh.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/toastr.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/simpletreemenu.js') }}" ></script>
+    <script type="text/javascript">ddtreemenu.createTree("treemenu1", true)</script>
+    <script type="text/javascript">ddtreemenu.createTree("treemenu2", true)</script>
+    <script type="text/javascript">ddtreemenu.createTree("treemenu3", true)</script>
+    <script>
+        $(function () {
+            //表格超出宽度鼠标悬停显示td内容
+            function paramsMatter(value, row, index) {
+                var span = document.createElement("span");
+                span.setAttribute("title", value);
+                span.innerHTML = value;
+                return span.outerHTML;
+            }
+            //td宽度以及内容超过宽度隐藏
+            function formatTableUnit(value, row, index) {
+                return {
+                    css: {
+                        "white-space": "nowrap",
+                        "text-overflow": "ellipsis",
+                        "overflow": "hidden",
+                        "max-width": "150px"
+                    }
+                }
+            }
+
+            $('#table').bootstrapTable({
+                //onClickRow: function (row, element, field) {
+                //    console.log(row, element, field)
+                //},
+                //onClickCell: function (field, value, row, element) {
+                //    console.log(field, value, row, element)
+                //},
+                url: '/teacher/tiku_data/',  // 请求数据源的路由
+                dataType: "json",
+                pagination: true, //前端处理分页
+                singleSelect: false,//是否只能单选
+                search: true, //显示搜索框，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                {#searchOnEnterKey: true,//按回车触发搜索#}
+                searchAlign: 'left',
+                trimOnSearch: true,
+                toolbar: '#toolbar', //工具按钮用哪个容器
+                striped: true, //是否显示行间隔色
+                cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pageNumber: 1, //初始化加载第10页，默认第一页
+                pageSize: 10, //每页的记录行数（*）
+                pageList: [10, 20, 50, 100], //可供选择的每页的行数（*）
+                strictSearch: false,//设置为 true启用 全匹配搜索，false为模糊搜索
+                showColumns: true, //显示内容列下拉框
+                showRefresh: true, //显示刷新按钮
+                buttonsAlign: 'left',
+                minimumCountColumns: 2, //当列数小于此值时，将隐藏内容列下拉框
+                clickToSelect: true, //设置true， 将在点击某行时，自动勾选rediobox 和 checkbox
+                {#        height: 500, //表格高度，如果没有设置height属性，表格自动根据记录条数决定表格高度#}
+                uniqueId: "id", //每一行的唯一标识，一般为主键列
+                showToggle: true, //是否显示详细视图和列表视图的切换按钮
+                cardView: false, //是否显示详细视图
+                {#detailView: true, //是否显示父子表，设置为 true 可以显示详细页面模式,在每行最前边显示+号#}
+                sidePagination: "client", //分页方式：client客户端分页，server服务端分页（*）
+                columns: [{  //定义表头,这个表头必须定义,下边field后边跟的字段名字必须与后端传递的字段名字相同.如:id、name、price
+                    //跟后端的字段名id  name price是完全一样的.
+
+                    field: 'id',
+                    title: '题目id',
+                    align: 'center',  //对齐方式，居中
+                    valign: 'middle',
+                    sortable: true, // 是否显示排序按钮
+                    searchable: false, // 是否在可搜索列中
+                    width: '5%',// 可以写各种样式
+                }, {
+                    field: 'question',
+                    title: '题目',
+                    align: 'center',
+                    valign: 'middle',
+                    width: '20%',
+                    cellStyle: formatTableUnit,
+                    formatter: paramsMatter
+                }, {
+                    field: 'ans_a',
+                    title: '选项A',
+                    align: 'center',
+                    valign: 'middle',
+                    width: '10%',
+
+                }, {
+                    field: 'ans_b',
+                    title: '选项B',
+                    align: 'center',
+                    valign: 'middle',
+                    width: '10%',
+
+                }, {
+                    field: 'ans_c',
+                    title: '选项C',
+                    align: 'center',
+                    valign: 'middle',
+                    width: '10%',
+
+                }, {
+                    field: 'ans_d',
+                    title: '选项D',
+                    align: 'center',
+                    valign: 'middle',
+                    width: '10%',
+
+                }, {
+                    field: 'ans_e',
+                    title: '选项E',
+                    align: 'center',
+                    valign: 'middle',
+                    width: '10%',
+
+                }, {
+                    field: 'answer',
+                    title: '答案',
+                    align: 'center',
+                    valign: 'middle',
+                    width: '5%',
+
+                }, {
+                    field: 'fenlei',
+                    title: '分类',
+                    align: 'center',
+                    valign: 'middle',
+                    width: '5%',
+
+                },  {
+                    field: 'kaodian',
+                    title: '考点',
+                    align: 'center',
+                    valign: 'middle',
+                    width: '5%',
+                }, {
+                    field: 'score',
+                    title: '分数',
+                    align: 'center',
+                    valign: 'middle',
+                    width: '5%',
+                }, {
+                    field: 'operator',
+                    title: '操作',
+                    align: 'center',
+                    valign: 'middle',
+                    width: '10%',
+                    // visible: false,
+                    formatter: function (value, row, index) {
+                        return '<a href="#editProject" data-toggle="modal" title="修改">' +
+                            '<i class="glyphicon glyphicon-pencil"></i> ' +
+                            '</a>' +
+                            '<a href="javascript:void(0)" title="删除" >' +
+                            '<i class="glyphicon glyphicon-trash text-danger"></i> ' +
+                            '</a>';
+                    },
+                    events: {
+                        'click a[title=删除]': function (e, value, row, index) {
+                            confirm(row.id)
+
+
+                        },
+                        'click a[title=修改]': function (e, value, row, index) {
+                            $('#edit_modal').modal();
+                            $('#edit_id').val(row.id);
+                            $('#ans_a').val(row.ans_a);
+                            $('#ans_b').val(row.ans_b);
+                            $('#ans_c').val(row.ans_c);
+                            $('#ans_d').val(row.ans_d);
+                            $('#ans_e').val(row.ans_e);
+                            $('#edit_question').val(row.question);
+                            $('#edit_answer').val(row.answer);
+                            $('#edit_fenlei').val(row.fenlei);
+                            $('#edit_kaodian').val(row.kaodian);
+                            $('#edit_score').val(row.score);
+                        },
+                    }
+                }
+                ],
+            });
+        });
+
+
+        // button自带的onclick放在表格内失效 只能用这种
+        $('#edit_submit').on('click', function () {
+                let edit_id = $('#edit_id').val();
+                let edit_question = $('#edit_question').val();
+                let ans_a = $('#ans_a').val();
+                let ans_b = $('#ans_b').val();
+                let ans_c = $('#ans_c').val();
+                let ans_d = $('#ans_d').val();
+                let ans_e = $('#ans_e').val();
+                let edit_answer = $('#edit_answer').val();
+                let edit_fenlei = $('#edit_fenlei').val();
+                let treemenu3 = $('input[name="edit_kaodian"]:checked');
+                let edit_kaodian = [];
+                treemenu3.each(function (index, element1) {
+                    edit_kaodian.push(element1.value)
+                });
+                let edit_score = $('#edit_score').val();
+                $.ajax({
+                    type: "get",
+                    url: "/teacher/tiku_edit?id={0}&question={1}&ans_a={2}&ans_b={3}&ans_c={4}&ans_d={5}&ans_e={6}&answer={7}&fenlei={8}&kaodian={9}&score={10}".signMix(edit_id, edit_question, ans_a, ans_b, ans_c, ans_d, ans_e, edit_answer, edit_fenlei, edit_kaodian, edit_score),
+                    success: function (e) {
+                        $('#table').bootstrapTable('refresh');
+                        toastr_pd(e, '修改')
+                    }
+                })
+            }
+        );
+
+        // 为了用模态框作为提示框
+        function confirm(sid) {
+            $("#del_modal").modal("show");
+            $("#del_submit").unbind().on("click", function () {
+                $.ajax({
+                    type: "get",
+                    url: "/teacher/tiku_del?id=" + sid,
+                    success: function (e) {
+                        toastr_pd(e, '删除');
+                        $('#table').bootstrapTable('refresh');
+                    }
+                })
+            });
+        }
+
+        //添加新增按钮
+        $(function () {
+            let a = '<button class="btn btn-default" type="button" name="add" title="新增" data-toggle="modal" data-target="#add_modal"><i class="glyphicon glyphicon-plus icon-refresh"></i></button>';
+            $('.columns-left').prepend(a)
+        });
+
+         function add() {
+            $('#add_modal').modal('show');
+            let question = $('#question').val();
+            let optionA = $('#optionA').val();
+            let optionB = $('#optionB').val();
+            let optionC = $('#optionC').val();
+            let optionD = $('#optionD').val();
+            let optionE = $('#optionE').val();
+            let answer = $('#answer').val();
+            let fenlei = $('#fenlei').val();
+            let treemenu1 = $('input[name="tiku_kaodian"]:checked');
+            let kaodian = [];
+            treemenu1.each(function (index, element1) {
+                kaodian.push(element1.value)
+            });
+            let score = $('#score').val();
+            console.log(question, optionA, optionB, optionC, optionD, optionE, answer, fenlei, kaodian, score);
+            $.ajax({
+                type: "get",
+                url: "/teacher/tiku_add?question={0}&optionA={1}&optionB={2}&optionC={3}&optionD={4}&optionE={5}&answer={6}&fenlei={7}&kaodian={8}&score={9}".signMix(question, optionA, optionB, optionC, optionD, optionE, answer, fenlei, kaodian, score),
+                success: function (e) {
+                    $('#table').bootstrapTable('refresh');
+                    toastr_pd(e, '添加')
+                }
+            })
+         }
+    </script>
+{% endblock %}
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap-table.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/simpletree.css') }}" />
+{% endblock %}

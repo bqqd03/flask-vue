@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/toastr.min.css') }}">
+{% endblock %}
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">Flasky</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ url_for('student.index') }}">Home</a></li>
+                <li><a href="{{ url_for('student.stu_myexam') }}">考试</a></li>
+                <li><a href="{{ url_for('student.stu_score') }}">分数</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if current_user.is_authenticated %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url_for('auth.change_password') }}">Change Password</a></li>
+                        <li><a href="{{ url_for('auth.change_email_request') }}">Change Email</a></li>
+                        <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+        {{ super() }}
+        <script type="text/javascript" src="{{ url_for('static',filename='js/index.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static',filename='js/jutils.min.js') }}"></script>
+        <script src="{{ url_for('static',filename='js/toastr.min.js') }}"></script>
+{% endblock %}
+
+{% macro danxuan(timu) %}
+    <div class="form-group">
+            <pre>{{ timu.question }}</pre>
+        <div>
+            <label class="radio-inline">
+                <input type="radio" name="{{ timu.id }}" value="a"> {{ timu.optionsA }}
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="{{ timu.id }}" value="b"> {{ timu.optionsB }}
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="{{ timu.id }}" value="c"> {{ timu.optionsC }}
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="{{ timu.id }}" value="d"> {{ timu.optionsD }}
+            </label>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro duoxuan(timu) %}
+    <div class="form-group">
+        <pre>{{ timu.question }}</pre>
+        <div>
+            {% if timu.optionsA %}
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="{{ timu.id }}" value="a"> {{ timu.optionsA }}
+                </label>
+            {% endif %}
+            {% if timu.optionsB %}
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="{{ timu.id }}" value="b"> {{ timu.optionsB }}
+                </label>
+            {% endif %}
+            {% if timu.optionsC %}
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="{{ timu.id }}" value="c"> {{ timu.optionsC }}
+                </label>
+            {% endif %}
+            {% if timu.optionsD %}
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="{{ timu.id }}" value="d"> {{ timu.optionsD }}
+                </label>
+            {% endif %}
+            {% if timu.ans_e %}
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="{{ timu.id }}" value="e"> {{ timu.optionsE }}
+                </label>
+            {% endif %}
+
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro tiankong(timu) %}
+    <div class="form-group">
+        <pre>{{ timu.question }}</pre>
+        <div>
+            <input type="text" class="form-control" placeholder="请填空" name="{{ timu.id }}">
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro jianda(timu) %}
+    <div class="form-group">
+        <pre>{{ timu.question }}</pre>
+       <div>
+            <input type="text" class="form-control" placeholder="请解答" name="{{ timu.id }}">
+        </div>
+    </div>
+{% endmacro %}

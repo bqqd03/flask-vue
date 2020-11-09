@@ -1,0 +1,227 @@
+{% extends 'teacher/teacher_base.html' %}
+{% block page_content %}
+    <div class="modal fade" id="add_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">新增</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group  required"><label class="control-label" for="username">试卷名称</label>
+
+                        <input autocomplete="off" class="form-control" id="papername" name="papername"
+                               placeholder="请输入试卷名称" required="" type="text" value="">
+                    </div>
+                    <div class="form-group  required"><label class="control-label" for="password">试卷题目</label>
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="单选" name="paper_tixing">单选题</label>
+                            {#                            <label><input autocomplete="off" class="form-control" id="papername"></label>#}
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="多选" name="paper_tixing">多选题</label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="填空" name="paper_tixing">填空题</label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="简答" name="paper_tixing">简答题</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                    <button type="button" id="add_submit" class="btn btn-primary" data-dismiss="modal" onclick="add()">
+                        确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="del_modal">
+        <div class="modal-dialog" style="width:400px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">提示</h4>
+                </div>
+                <div class="modal-body">
+                    <div class='modal-body text-center' id='myConfirmContent' style='font-size:18px;'>
+                        是否确定要删除?
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="del_submit">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div style="width: 100%;margin: 0 auto;background-color: #f2f2f2;border-radius: 15px">
+                <table id="table" class="table table-bordered" style=""></table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <!-- bootstrap-table.min.js -->
+    <script src="{{ url_for('static',filename='js/bootstrap-table.min.js') }}"></script>
+    <!-- 引入中文语言包 -->
+    <script src="{{ url_for('static',filename='js/bootstrap-table-zh-CN.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/toastr.min.js') }}"></script>
+    <script>
+        $(function () {
+            //表格超出宽度鼠标悬停显示td内容
+            function paramsMatter(value, row, index) {
+                var span = document.createElement("span");
+                span.setAttribute("title", value);
+                span.innerHTML = value;
+                return span.outerHTML;
+            }
+
+            //td宽度以及内容超过宽度隐藏
+            function formatTableUnit(value, row, index) {
+                return {
+                    css: {
+                        "white-space": "nowrap",
+                        "text-overflow": "ellipsis",
+                        "overflow": "hidden",
+                        "max-width": "150px"
+                    }
+                }
+            }
+
+            $('#table').bootstrapTable({
+                //onClickRow: function (row, element, field) {
+                //    console.log(row, element, field)
+                //},
+                //onClickCell: function (field, value, row, element) {
+                //    console.log(field, value, row, element)
+                //},
+                url: '/teacher/paper_data/',  // 请求数据源的路由
+                dataType: "json",
+                pagination: true, //前端处理分页
+                singleSelect: false,//是否只能单选
+                search: true, //显示搜索框，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                {#searchOnEnterKey: true,//按回车触发搜索#}
+                searchAlign: 'left',
+                trimOnSearch: true,
+                toolbar: '#toolbar', //工具按钮用哪个容器
+                striped: true, //是否显示行间隔色
+                cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pageNumber: 1, //初始化加载第10页，默认第一页
+                pageSize: 10, //每页的记录行数（*）
+                pageList: [10, 20, 50, 100], //可供选择的每页的行数（*）
+                strictSearch: false,//设置为 true启用 全匹配搜索，false为模糊搜索
+                showColumns: true, //显示内容列下拉框
+                showRefresh: true, //显示刷新按钮
+                buttonsAlign: 'left',
+                minimumCountColumns: 2, //当列数小于此值时，将隐藏内容列下拉框
+                clickToSelect: true, //设置true， 将在点击某行时，自动勾选rediobox 和 checkbox
+                {#        height: 500, //表格高度，如果没有设置height属性，表格自动根据记录条数决定表格高度#}
+                uniqueId: "id", //每一行的唯一标识，一般为主键列
+                showToggle: true, //是否显示详细视图和列表视图的切换按钮
+                cardView: false, //是否显示详细视图
+                {#detailView: true, //是否显示父子表，设置为 true 可以显示详细页面模式,在每行最前边显示+号#}
+                sidePagination: "client", //分页方式：client客户端分页，server服务端分页（*）
+                columns: [{  //定义表头,这个表头必须定义,下边field后边跟的字段名字必须与后端传递的字段名字相同.如:id、name、price
+                    //跟后端的字段名id  name price是完全一样的.
+
+                    field: 'id',
+                    title: '试卷id',
+                    align: 'center',  //对齐方式，居中
+                    valign: 'middle',
+                    sortable: true, // 是否显示排序按钮
+                    searchable: false, // 是否在可搜索列中
+                    width: '10%',// 可以写各种样式
+                }, {
+                    field: 'name',
+                    title: '试卷名称',
+                    align: 'center',
+                    valign: 'middle',
+                    width: '20%',
+                    cellStyle: formatTableUnit,
+                    formatter: paramsMatter
+                }, {
+                    field: 'timu_id',
+                    title: '题目集合',
+                    align: 'center',
+                    valign: 'middle',
+                    width: '10%',
+                    cellStyle: formatTableUnit,
+                    formatter: paramsMatter
+
+                }, {
+                    field: 'operator',
+                    title: '操作',
+                    align: 'center',
+                    valign: 'middle',
+                    width: '10%',
+                    // visible: false,
+                    formatter: function (value, row, index) {
+                        return '<a href="javascript:void(0)" title="删除" >' +
+                            '<i class="glyphicon glyphicon-trash text-danger"></i> ' +
+                            '</a>';
+                    },
+                    events: {
+                        'click a[title=删除]': function (e, value, row, index) {
+                            confirm(row.id)
+                        },
+                    }
+                }
+                ],
+            });
+        });
+
+
+        // 为了用模态框作为提示框
+        function confirm(sid) {
+            $("#del_modal").modal("show");
+            $("#del_submit").unbind().on("click", function () {
+                $.ajax({
+                    type: "get",
+                    url: "/teacher/paper_del?id=" + sid,
+                    success: function (e) {
+                        toastr_pd(e,'删除');
+                        $('#table').bootstrapTable('refresh');
+                    }
+                })
+            });
+        }
+
+        //添加新增按钮
+        $(function () {
+            let a = '<button class="btn btn-default" type="button" name="add" title="新增" data-toggle="modal" data-target="#add_modal"><i class="glyphicon glyphicon-plus icon-refresh"></i></button>';
+            $('.columns-left').prepend(a)
+        });
+
+        function add() {
+            $('#add_modal').modal('show');
+            let papername = $('#papername').val();
+            let checkboxL = $('input[name="paper_tixing"]:checked');
+            let timu_leixing = [];
+            checkboxL.each(function (index, element) {
+                timu_leixing.push(element.value)
+            });
+            timu_leixing = timu_leixing.toString();
+            $.ajax({
+                type: "get",
+                url: "/teacher/paper_add?papername={0}&timu_leixing={1}".signMix(papername, timu_leixing),
+                success: function (e) {
+                    $('#table').bootstrapTable('refresh');
+                    toastr_pd(e,'添加');
+                }
+            })
+        }
+
+    </script>
+{% endblock %}
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap-table.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/toastr.min.css') }}">
+{% endblock %}
